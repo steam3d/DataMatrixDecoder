@@ -112,3 +112,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+#Custom
+input/
+output/
+.DS_Store
+.idea/
