@@ -17,6 +17,44 @@ import tempfile
 from multiprocessing.pool import ThreadPool
 
 
+class ConsoleProgressBar:
+    """
+    https://stackoverflow.com/questions/3173320/text-progress-bar-in-the-console
+    """
+
+    def __init__(self, total):
+        self.total = total
+        self.iteration = -1
+        self.add_progress()
+
+    def add_progress(self):
+        self._printProgressBar()
+
+    # Print iterations progress
+    def _printProgressBar(self, prefix='', suffix='', decimals=1, length=100, fill='█', printEnd="\r"):
+        """
+        Call in a loop to create terminal progress bar
+        @params:
+            iteration   - Required  : current iteration (Int)
+            total       - Required  : total iterations (Int)
+            prefix      - Optional  : prefix string (Str)
+            suffix      - Optional  : suffix string (Str)
+            decimals    - Optional  : positive number of decimals in percent complete (Int)
+            length      - Optional  : character length of bar (Int)
+            fill        - Optional  : bar fill character (Str)
+            printEnd    - Optional  : end character (e.g. "\r", "\r\n") (Str)
+        """
+
+        self.iteration += 1
+        percent = ("{0:." + str(decimals) + "f}").format(100 * (self.iteration / float(self.total)))
+        filledLength = int(length * self.iteration // self.total)
+        bar = fill * filledLength + '-' * (length - filledLength)
+        print(f'\r{prefix} |{bar}| {percent}% {suffix}', end=printEnd)
+        # Print New Line on Complete
+        if self.iteration == self.total:
+            print()
+
+
 # Конвертировать изображение и получить данные
 def extract_data(file):
     eps_image = Image.open(file)
@@ -47,15 +85,15 @@ def is_file_extension(file_name, extension=".eps"):
     return file_extension.lower() == extension
 
 
-def save_data(file, out_file, counter):
+def save_data(file, out_file, progress):
     global threadLock
 
     if is_file_extension(file):
         code_data = extract_data(file)
 
     threadLock.acquire()
-    counter[0] -= 1
-    print("    Осталось:", counter[0], "Обработан:", get_file_name(file))
+    #progress[0].add_progress()
+    progress.add_progress()
     out_file.write(code_data + "\n")
     threadLock.release()
 
@@ -107,13 +145,16 @@ def create_pool(files_list, output_file_path):
 
     with open(output_file_path, 'a+') as out_file:
 
-        print("Переходим к", get_file_name(path))
+        print()
+        print(f"Обратаываем '{get_file_name(path)}' файлов {len(files_list)}")
 
         pool = ThreadPool(processes=8)
-        files_count = [len(files_list)]
+        #progress = []
+        #progress.append(ConsoleProgressBar(len(files_list)))
+        progress = ConsoleProgressBar(len(files_list))
 
         for file in files_list:
-            pool.apply_async(save_data, args=(file, out_file, files_count))
+            pool.apply_async(save_data, args=(file, out_file, progress))
         pool.close()
         pool.join()
 
@@ -142,6 +183,9 @@ if __name__ == '__main__':
     # Contains files or folder to extract data
     file_folder_list = find_files_folder(pathin)
 
+    print("Найдены файлы и папки:")
+    print(file_folder_list)
+
     for path in file_folder_list:
 
         if os.path.isdir(path):
@@ -156,4 +200,5 @@ if __name__ == '__main__':
                     input_files = find_eps_files(tmpdirname)
                     create_pool(input_files, os.path.join(pathout, get_file_name(path)))
 
+    print()
     print("Завершено за", datetime.now() - start_time)
