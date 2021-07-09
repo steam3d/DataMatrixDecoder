@@ -142,11 +142,14 @@ def create_pool(files_list, output_file_path):
     # Check file if it exist remove it
     if os.path.isfile(output_file_path):
         os.remove(output_file_path)
+    if len(files_list) == 0:
+        print()
+        print(f"Файлы *.eps не найдены в '{get_file_name(path)}'")
+        return
 
     with open(output_file_path, 'a+') as out_file:
-
         print()
-        print(f"Обратаываем '{get_file_name(path)}' файлов {len(files_list)}")
+        print(f"Обрабатываем '{get_file_name(path)}' файлов {len(files_list)}")
 
         pool = ThreadPool(processes=8)
         #progress = []
