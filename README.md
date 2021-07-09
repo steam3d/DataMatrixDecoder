@@ -7,7 +7,7 @@
 2. [pylibdmtx](https://pypi.org/project/pylibdmtx/) 
    >Установка через консоль после установки Python `pip install pylibdmtx`
 3. [ghostscript](https://www.ghostscript.com/download/gsdnld.html)
-
+4. Добавить путь до ghostscript `C:\Program Files\gs\gs9.54.0\bin` в `Переменные среды` раздел `Path`. Для пользователя и системы.
 # Как использовать
 ## Обычный вариант
 1. Скопировать файл `decoder.py` в любую папку. Двойным нажатием запустить.
