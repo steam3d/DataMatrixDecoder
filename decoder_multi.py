@@ -158,6 +158,17 @@ def create_pool(files_list, output_file_path):
         pool.close()
         pool.join()
 
+        out_file.seek(0)
+        line_count = 0
+
+        for line in out_file:
+            line_count += 1
+
+        if line_count == len(files_list):
+            print("Проверка пройдена. Количество строк и файлов совпадает.")
+        else:
+            print(f"Проверка не пройдена. Файлов {len(files_list)}, Количество строк {line_count}")
+
 def get_file_name(path):
     return os.path.basename(os.path.normpath(path))
 
