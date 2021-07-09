@@ -8,7 +8,7 @@
    >Установка через консоль после установки Python `pip install pylibdmtx`
 3. [ghostscript](https://www.ghostscript.com/download/gsdnld.html)
 4. Добавить путь до ghostscript `C:\Program Files\gs\gs9.54.0\bin` в `Переменные среды` раздел `Path`. Для пользователя и системы.
-<img src="https://user-images.githubusercontent.com/30986874/125140309-df7f6700-e11a-11eb-8394-4cd3f64c8fe8.png" width="400">
+<img src="https://user-images.githubusercontent.com/30986874/125140309-df7f6700-e11a-11eb-8394-4cd3f64c8fe8.png" width="550">
 
 
 # Как использовать
